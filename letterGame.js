@@ -142,7 +142,7 @@ guessBtn.onclick = function() {
     let guess = guessInput.value.trim().toUpperCase();
     
     if (!guess) {
-        messageDiv.textContent = "Please guess";
+        messageDiv.textContent = "Please enter a guess";
         return;
     }
 
@@ -154,7 +154,7 @@ guessBtn.onclick = function() {
 
         if (gameMode === 1) {
             // Show all correct answers after guess in mode 1
-            messageDiv.textContent += ` The correct Pokémon were: ${correctPokemon.join(", ")}`;
+            messageDiv.textContent = ` The correct Pokémon were: ${correctPokemon.join(", ")}`;
             updateAccuracy();
             guessInput.disabled = true;
             guessBtn.disabled = true;
@@ -167,7 +167,7 @@ guessBtn.onclick = function() {
             updateAccuracy();
             messageDiv.textContent += ` Remaining Pokémon to guess: ${correctPokemon.length}`;
             if (correctPokemon.length === 0) {
-                messageDiv.textContent += " You guessed all correct options!";
+                messageDiv.textContent += " You guessed all!";
                 guessInput.disabled = true;
                 guessBtn.disabled = true;
                 idkBtn.disabled = true;
@@ -176,19 +176,19 @@ guessBtn.onclick = function() {
         }
     } 
     else {
-        messageDiv.textContent = "Incorrect";
-        updateAccuracy();
-
-        if (gameMode === 1) {
-            // Show answers and go to next
-            messageDiv.textContent += ` The correct Pokémon were: ${correctPokemon.join(", ")}`;
-            guessInput.disabled = true;
-            guessBtn.disabled = true;
-            idkBtn.disabled = true;
-            nextBtn.style.display = "inline-block";
+        if (gameMode === 1){
+          messageDiv.textContent = `Incorrect. The correct Pokémon were: ${correctPokemon.join(", ")}`;
+          updateAccuracy();
+          
+          guessInput.disabled = true;
+          guessBtn.disabled = true;
+          idkBtn.disabled = true;
+          
+          nextBtn.style.display = "inline-block";
         }
         else{
-             messageDiv.textContent += ` Remaining Pokémon to guess: ${correctPokemon.length}`;
+           messageDiv.textContent = "Incorrect.";
+           updateAccuracy();
         }
     }
     guessInput.value = "";
