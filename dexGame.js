@@ -27,6 +27,12 @@ const startBtn = document.getElementById("startBtn");
 const nexBtn = document.getElementById("nextBtn");
 const endBtn = document.getElementById("endBtn");
 const idkBtn = document.getElementById("idkBtn");
+const backBtn = document.getElementById("backBtn");
+
+
+backBtn.onclick = function(){
+    window.location.href = "index.html";
+}
 
 startBtn.onclick = function(){
     const startGen = parseInt(document.getElementById("startGen").value);
@@ -230,4 +236,5 @@ function endGame(){
     document.getElementById("nextBtn").style.display = "none";
     document.getElementById("idkBtn").style.display = "none";
 
+    backBtn.style.display = "inline-block";
 }
