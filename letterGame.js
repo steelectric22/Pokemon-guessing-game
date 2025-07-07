@@ -43,6 +43,12 @@ const startBtn = document.getElementById("startBtn");
 const idkBtn = document.getElementById("idkBtn");
 const nextBtn = document.getElementById("nextBtn");
 const endBtn = document.getElementById("endBtn");
+const backBtn = document.getElementById("backBtn");
+
+
+backBtn.onclick = function(){
+    window.location.href = "index.html";
+}
 
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -197,20 +203,19 @@ nextBtn.onclick = function() {
 };
 
 endBtn.onclick = function() {
-    if (playing) {
-        playing = false;
-        infoDiv.textContent = "";
-        messageDiv.textContent = `Game ended! Final accuracy: ${((numCorrect / totalGuesses) * 100).toFixed(1)}%`;
-        accuracyDiv.textContent = "";
-        guessInput.style.display = "none";
-        guessBtn.style.display = "none";
-        idkBtn.style.display = "none";
-        nextBtn.style.display = "none";
-        endBtn.style.display = "none";
-        startBtn.disabled = false;
-        document.getElementById("gameType").disabled = false;
-        document.getElementById("gameMode").disabled = false;
-    }
+    playing = false;
+    infoDiv.textContent = "";
+    messageDiv.textContent = `Game ended! Final accuracy: ${((numCorrect / totalGuesses) * 100).toFixed(1)}%`;
+    accuracyDiv.textContent = "";
+    guessInput.style.display = "none";
+    guessBtn.style.display = "none";
+    idkBtn.style.display = "none";
+    nextBtn.style.display = "none";
+    endBtn.style.display = "none";
+    startBtn.disabled = false;
+    document.getElementById("gameType").disabled = false;
+    document.getElementById("gameMode").disabled = false;
+    backBtn.style.display = "inline-block";
 };
 
 function updateAccuracy() {
