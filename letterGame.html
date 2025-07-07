@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> Pokemon guess by first letter</title>
+</head>
+
+<body>
+    <h1> Pokemon guess by first letter</h1>
+
+    <label for="gameType">Game Type:</label><br>
+    <select id="gameType">
+        <option value="1">Guess by Type</option>
+        <option value="2">Guess by Gen</option>
+    </select><br>
+
+    <label for="gameMode">Game Mode:</label><br>
+    <select id="gameMode">
+        <option value="1">One Guess</option>
+        <option value="2">Guess All</option>
+    </select><br><br>
+
+    <button id="startBtn">Start Game</button>
+    <button id="idkBtn" style="display:none;">idk/give up</button>
+    <button id="nextBtn" style="display:none;">Next Pokemon</button>
+    <button id="endBtn" style="display:none;">End Game</button>
+
+    <div id="info"></div>
+    <input type="text" id="guessInput" placeholder="Enter your guess here" style="display:none;">
+    <button id="guessBtn" style="display:none;">Submit Guess</button>
+
+    <div id="message"></div>
+    <div id="accuracy"></div>
+
+      <script src="pokemon.js"></script>
+     <script src="letterGame.js"></script> 
+
+
+
+</body>
+
+
+
+
+
+</html>
