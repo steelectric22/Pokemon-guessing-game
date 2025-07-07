@@ -1,4 +1,4 @@
-# This is a guessing game for pokemon based on their dex number, types, and first letter
+# This is a basic guessing game for pokemon based on their dex number, types, and first letter
 2 gamemodes: one for guessing based on dex number, one for first letter
 ----------------------------------------
 Gamemode 1: guess by dex number
