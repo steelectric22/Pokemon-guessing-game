@@ -142,7 +142,7 @@ guessBtn.onclick = function() {
     let guess = guessInput.value.trim().toUpperCase();
     
     if (!guess) {
-        messageDiv.textContent = "Please enter a guess";
+        messageDiv.textContent = "Please guess";
         return;
     }
 
@@ -167,7 +167,7 @@ guessBtn.onclick = function() {
             updateAccuracy();
             messageDiv.textContent += ` Remaining Pokémon to guess: ${correctPokemon.length}`;
             if (correctPokemon.length === 0) {
-                messageDiv.textContent += " You guessed all!";
+                messageDiv.textContent += " You guessed all correct options!";
                 guessInput.disabled = true;
                 guessBtn.disabled = true;
                 idkBtn.disabled = true;
@@ -178,6 +178,18 @@ guessBtn.onclick = function() {
     else {
         messageDiv.textContent = "Incorrect";
         updateAccuracy();
+
+        if (gameMode === 1) {
+            // Show answers and go to next
+            messageDiv.textContent += ` The correct Pokémon were: ${correctPokemon.join(", ")}`;
+            guessInput.disabled = true;
+            guessBtn.disabled = true;
+            idkBtn.disabled = true;
+            nextBtn.style.display = "inline-block";
+        }
+        else{
+             messageDiv.textContent += ` Remaining Pokémon to guess: ${correctPokemon.length}`;
+        }
     }
     guessInput.value = "";
 };
