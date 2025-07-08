@@ -17,6 +17,7 @@ let playing = false;
 let currentPokemonIndex;
 let numCorrect = 0;
 let totalGuesses = 0;
+let currentGuesses = new Set();
 
 const infoDiv = document.getElementById("info");
 const messageDiv = document.getElementById("message");
@@ -99,7 +100,7 @@ function nextPokemon(){
     if (!playing){
         return;
     }
-
+    currentGuesses.clear();
     currentPokemonIndex = Math.floor(Math.random() * (high - low + 1)) + low;
 
     
@@ -111,7 +112,7 @@ function nextPokemon(){
     if (difficulty === 2){
         infoDiv.textContent = `Dex # ${p.dex}`;
     }
-    messageDiv.textContent = "Make a guess";
+    
 
     if (mode === 2){
         idkBtn.disabled = false;
@@ -130,6 +131,14 @@ guessBtn.onclick = function(){
         messageDiv.textContent = "Please enter a guess";
         return;
     }
+
+    if (currentGuesses.has(guess)){
+        messageDiv.textContent = "You already guessed that";
+        guessInput.value = "";
+        return;
+    }
+
+    currentGuesses.add(guess);
 
     const currentPokemon = allPokemon[currentPokemonIndex];
     const actualName = currentPokemon.name.toUpperCase();
