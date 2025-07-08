@@ -1,5 +1,5 @@
 const genBounds = [
-  0,     // unused (so gen 1 is at index 1)
+  0,     
   1,     // Gen 1 start dex number
   152,   // Gen 2 start dex number
   252,   // Gen 3 start dex number
@@ -157,7 +157,7 @@ guessBtn.onclick = function(){
             updateAccuracy();
         }
         else{
-            messageDiv.textContent = `Incorrect! Correct answer was ${currentPokemon.name}`;
+            messageDiv.textContent = `Incorrect! The correct answer was ${currentPokemon.name}`;
             updateAccuracy();
         }
     }
@@ -210,16 +210,22 @@ nextBtn.onclick = function(){
     messageDiv.textContent = ""; // clear message
     guessInput.value = "";       // clear input
     
-    nextPokemon();  // pick next Pokémon and update infoDiv
+    nextPokemon();  
 
 
 
 };
 
-guessInput.addEventListener("keydown", function(event){
+document.addEventListener("keydown", function(event){
     if (event.key === "Enter"){
         event.preventDefault();
-        guessBtn.click();
+        if (!guessInput.disabled && guessBtn.style.display !== "none") {
+            guessBtn.click();
+        } 
+        else if (guessInput.disabled && !nextBtn.disabled && nextBtn.style.display !== "none") {
+            nextBtn.click();
+        }
+         
     }
 });
 
