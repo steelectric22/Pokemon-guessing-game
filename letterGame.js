@@ -136,6 +136,7 @@ startBtn.onclick = function() {
     infoDiv.textContent = "";
 
     prepareChallenge();
+    guessInput.focus();
 };
 
 guessBtn.onclick = function() {
@@ -214,12 +215,15 @@ idkBtn.onclick = function() {
     guessBtn.disabled = true;
     idkBtn.disabled = true;
     nextBtn.style.display = "inline-block";
+
+    guessInput.focus();
     };
 
 
 nextBtn.onclick = function() {
     if (!playing) return;
     prepareChallenge();
+    guessInput.focus();
 };
 
 document.addEventListener("keydown", function(event){
