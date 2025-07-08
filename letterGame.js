@@ -76,7 +76,7 @@ function prepareChallenge() {
     // pick random type
     if (gameType === 1) {
         currentType = types[randomInt(1, 18)];
-        // filter Pokémon matching letter + type
+        // filter Pokemon matching letter + type
         correctPokemon = allPokemon.filter(p => 
         p.name[0].toUpperCase() === currentLetter && p.type.includes(currentType)
         ).map(p => p.name.toUpperCase());
@@ -162,7 +162,7 @@ guessBtn.onclick = function() {
 
         if (gameMode === 1) {
             // Show all correct answers after guess in mode 1
-            messageDiv.textContent = ` The correct Pokémon were: ${correctPokemon.join(", ")}`;
+            messageDiv.textContent = ` The correct Pokemon were: ${correctPokemon.join(", ")}`;
             updateAccuracy();
             guessInput.disabled = true;
             guessBtn.disabled = true;
@@ -173,9 +173,9 @@ guessBtn.onclick = function() {
             // Remove guessed Pokémon for mode 2
              correctPokemon = correctPokemon.filter(p => p !== guess);
             updateAccuracy();
-            messageDiv.textContent += ` Remaining Pokémon to guess: ${correctPokemon.length}`;
+            messageDiv.textContent += ` Remaining Pokemon to guess: ${correctPokemon.length}`;
             if (correctPokemon.length === 0) {
-                messageDiv.textContent += " You guessed all!";
+                messageDiv.textContent += " You guessed all the possible Pokemon!";
                 guessInput.disabled = true;
                 guessBtn.disabled = true;
                 idkBtn.disabled = true;
@@ -185,7 +185,7 @@ guessBtn.onclick = function() {
     } 
     else {
         if (gameMode === 1){
-          messageDiv.textContent = `Incorrect. The correct Pokémon were: ${correctPokemon.join(", ")}`;
+          messageDiv.textContent = `Incorrect. The correct Pokemon were: ${correctPokemon.join(", ")}`;
           updateAccuracy();
           
           guessInput.disabled = true;
@@ -205,7 +205,7 @@ guessBtn.onclick = function() {
 idkBtn.onclick = function() {
     if (!playing || gameMode !== 2) return;
 
-    messageDiv.textContent = `The correct Pokémon were: ${correctPokemon.join(", ")}`;
+    messageDiv.textContent = `The correct Pokemon were: ${correctPokemon.join(", ")}`;
     totalGuesses += correctPokemon.length;
     correctPokemon = [];
     updateAccuracy();
@@ -222,10 +222,16 @@ nextBtn.onclick = function() {
     prepareChallenge();
 };
 
-guessInput.addEventListener("keydown", function(event){
+document.addEventListener("keydown", function(event){
     if (event.key === "Enter"){
         event.preventDefault();
-        guessBtn.click();
+        if (!guessInput.disabled && guessBtn.style.display !== "none") {
+            guessBtn.click();
+        } 
+        else if (guessInput.disabled && !nextBtn.disabled && nextBtn.style.display !== "none") {
+            nextBtn.click();
+        }
+         
     }
 });
 
