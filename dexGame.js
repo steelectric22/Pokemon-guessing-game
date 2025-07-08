@@ -82,6 +82,7 @@ startBtn.onclick = function(){
 
 
     nextPokemon();
+    guessInput.focus();
 };
 idkBtn.onclick = function(){
     const currentPokemon = allPokemon[currentPokemonIndex];
@@ -198,6 +199,7 @@ guessBtn.onclick = function(){
         }
     }
     guessInput.value = "";
+    
 };
 nextBtn.onclick = function(){
     // hide the next button
@@ -211,7 +213,7 @@ nextBtn.onclick = function(){
     guessInput.value = "";       // clear input
     
     nextPokemon();  
-
+    guessInput.focus();
 
 
 };
