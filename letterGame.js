@@ -1,5 +1,5 @@
 const letters = [
-  0, // unused for 1-based indexing if you want
+  0, 
   "A","B","C","D","E","F","G","H","I","J","K","L","M",
   "N","O","P","Q","R","S","T","U","V","W","X","Y","Z"
 ];
@@ -33,6 +33,7 @@ let currentLetter = null;
 let currentType = null;
 let currentGen = null;
 let correctPokemon = [];
+let correctGuesses = new Set();
 
 const infoDiv = document.getElementById("info");
 const messageDiv = document.getElementById("message");
@@ -55,6 +56,7 @@ function randomInt(min, max) {
 }
 
 function prepareChallenge() {
+    correctGuesses.clear();
     guessInput.value = "";
     guessInput.disabled = false;
     guessBtn.disabled = false;
@@ -145,7 +147,13 @@ guessBtn.onclick = function() {
         messageDiv.textContent = "Please enter a guess";
         return;
     }
+    if (correctGuesses.has(guess)){
+        messageDiv.textContent = "You already guessed that";
+        guessInput.value = "";
+        return;
+    }
 
+    correctGuesses.add(guess);
     totalGuesses++;
 
     if (correctPokemon.includes(guess)) {
