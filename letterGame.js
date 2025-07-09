@@ -227,7 +227,7 @@ guessBtn.onclick = function() {
 idkBtn.onclick = function() {
     if (!playing || gameMode !== 2) return;
 
-    messageDiv.textContent = `The correct Pokemon were: ${correctPokemon.join(", ")}`;
+    messageDiv.textContent = `The correct Pokemon were: ${correctPokemon.map(p => p.name).join(", ")}`;
     totalGuesses += correctPokemon.length;
     correctPokemon = [];
     updateAccuracy();
