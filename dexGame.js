@@ -1,5 +1,5 @@
 const genBounds = [
-  0,     
+  0,     // unused (so gen 1 is at index 1)
   1,     // Gen 1 start dex number
   152,   // Gen 2 start dex number
   252,   // Gen 3 start dex number
@@ -17,7 +17,6 @@ let playing = false;
 let currentPokemonIndex;
 let numCorrect = 0;
 let totalGuesses = 0;
-let currentGuesses = new Set();
 
 const infoDiv = document.getElementById("info");
 const messageDiv = document.getElementById("message");
@@ -41,6 +40,7 @@ startBtn.onclick = function(){
     difficulty = parseInt(document.getElementById("difficulty").value);
     mode = parseInt(document.getElementById("mode").value);
     document.getElementById("endBtn").style.display = "inline-block";
+    
 
     // allow inputs
     guessInput.value = "";
@@ -82,7 +82,6 @@ startBtn.onclick = function(){
 
 
     nextPokemon();
-    guessInput.focus();
 };
 idkBtn.onclick = function(){
     const currentPokemon = allPokemon[currentPokemonIndex];
@@ -101,7 +100,7 @@ function nextPokemon(){
     if (!playing){
         return;
     }
-    currentGuesses.clear();
+
     currentPokemonIndex = Math.floor(Math.random() * (high - low + 1)) + low;
 
     
@@ -113,7 +112,7 @@ function nextPokemon(){
     if (difficulty === 2){
         infoDiv.textContent = `Dex # ${p.dex}`;
     }
-    
+    messageDiv.textContent = "Make a guess";
 
     if (mode === 2){
         idkBtn.disabled = false;
@@ -133,14 +132,6 @@ guessBtn.onclick = function(){
         return;
     }
 
-    if (currentGuesses.has(guess)){
-        messageDiv.textContent = "You already guessed that";
-        guessInput.value = "";
-        return;
-    }
-
-    currentGuesses.add(guess);
-
     const currentPokemon = allPokemon[currentPokemonIndex];
     const actualName = currentPokemon.name.toUpperCase();
     const userGuess = guess.toUpperCase();
@@ -158,7 +149,7 @@ guessBtn.onclick = function(){
             updateAccuracy();
         }
         else{
-            messageDiv.textContent = `Incorrect! The correct answer was ${currentPokemon.name}`;
+            messageDiv.textContent = `Incorrect! Correct answer was ${currentPokemon.name}`;
             updateAccuracy();
         }
     }
@@ -199,7 +190,6 @@ guessBtn.onclick = function(){
         }
     }
     guessInput.value = "";
-    
 };
 nextBtn.onclick = function(){
     // hide the next button
@@ -212,22 +202,16 @@ nextBtn.onclick = function(){
     messageDiv.textContent = ""; // clear message
     guessInput.value = "";       // clear input
     
-    nextPokemon();  
-    guessInput.focus();
+    nextPokemon();  // pick next Pokémon and update infoDiv
+
 
 
 };
 
-document.addEventListener("keydown", function(event){
+guessInput.addEventListener("keydown", function(event){
     if (event.key === "Enter"){
         event.preventDefault();
-        if (!guessInput.disabled && guessBtn.style.display !== "none") {
-            guessBtn.click();
-        } 
-        else if (guessInput.disabled && !nextBtn.disabled && nextBtn.style.display !== "none") {
-            nextBtn.click();
-        }
-         
+        guessBtn.click();
     }
 });
 
