@@ -35,6 +35,10 @@ let currentGen = null;
 let correctPokemon = [];
 let correctGuesses = new Set();
 
+let letterIndex = 0;
+let answersPerLetter = [];
+let currentLetterAnswer = null;
+
 const infoDiv = document.getElementById("info");
 const messageDiv = document.getElementById("message");
 const accuracyDiv = document.getElementById("accuracy");
@@ -55,6 +59,22 @@ backBtn.onclick = function(){
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+// disables the second dropdown if user wants to do A-z challenge
+document.getElementById("gameType").addEventListener("change", function () {
+    const selectedGameType = parseInt(this.value);
+    const gameModeSelect = document.getElementById("gameMode");
+
+    if (selectedGameType === 3) {
+        gameModeSelect.innerHTML = '<option value="1">Guess One</option>';
+        gameModeSelect.disabled = true;
+    } else {
+        gameModeSelect.innerHTML = 
+            `<option value="1">Guess One</option>
+            <option value="2">Keep Guessing</option>`;
+        gameModeSelect.disabled = false;
+    }
+});
 
 function prepareChallenge() {
     correctGuesses.clear();
@@ -106,6 +126,50 @@ function prepareChallenge() {
 
 };
 
+function prepareAZChallenge(){
+    letterIndex = 0;
+    correctGuesses.clear();
+    guessInput.value = "";
+    guessInput.disabled = false;
+    guessBtn.disabled = false;
+    messageDiv.textContent = "";
+    nextBtn.style.display = "none";
+    idkBtn.disabled = false;
+    idkBtn.style.display = "none";
+    
+    currentType = types[randomInt(1, 18)];
+    answersPerLetter = [];
+    
+    loadAZChallenge();
+};
+
+function loadAZChallenge(){
+
+    if (letterIndex > 26){
+        messageDiv.textContent = "You’ve completed all letters!";
+        endBtn.click();
+        hintBtn.disabled = true;
+        return;
+    }
+    
+    messageDiv.textContent = "";
+    currentLetter = letters[letterIndex];
+    correctPokemon = allPokemon.filter(p => 
+        p.name[0].toUpperCase() === currentLetter && p.type.includes(currentType));
+    
+    if (correctPokemon.length === 0){
+      letterIndex++;
+      loadAZChallenge();
+      return;
+    }
+    
+    infoDiv.textContent = `Type: ${currentType} | Guess a Pokemon starting with "${currentLetter}"`;
+    guessInput.disabled = false;
+    guessBtn.disabled = false;
+    nextBtn.style.display = "none";
+    guessInput.focus();
+};
+
 //get game ready
 startBtn.onclick = function() {
     gameType = parseInt(document.getElementById("gameType").value);
@@ -134,8 +198,13 @@ startBtn.onclick = function() {
     endBtn.style.display = "inline-block";
     messageDiv.textContent = "";
     infoDiv.textContent = "";
-
-    prepareChallenge();
+    
+    if (gameType === 3){
+        prepareAZChallenge();
+    }
+    else{
+        prepareChallenge();
+    }
     guessInput.focus();
 };
 
@@ -166,61 +235,64 @@ guessBtn.onclick = function() {
         messageDiv.textContent = "Please enter a guess";
         return;
     }
+    
     if (correctGuesses.has(guess)){
         messageDiv.textContent = "You already guessed that";
         guessInput.value = "";
         return;
     }
-
+    
     totalGuesses++;
     hintDiv.textContent = "";
 
-    if (correctPokemon.some(p => p.name.toUpperCase() === guess)) {
-        messageDiv.textContent = "Correct!";
-        numCorrect++;
-        
-        correctGuesses.add(guess);
-        
 
-        if (gameMode === 1) {
-            // Show all correct answers after guess in mode 1
-            messageDiv.textContent = ` The correct Pokemon were: ${correctPokemon.map(p => p.name).join(", ")}`;
+      if (correctPokemon.some(p => p.name.toUpperCase() === guess)) {
+          messageDiv.textContent = "Correct!";
+          numCorrect++;
+          
+          correctGuesses.add(guess);
+          
+  
+          if (gameMode === 1 || gameType === 3) {
+              // Show all correct answers after guess in mode 1
+              messageDiv.textContent = ` The correct Pokemon were: ${correctPokemon.map(p => p.name).join(", ")}`;
+              updateAccuracy();
+              guessInput.disabled = true;
+              guessBtn.disabled = true;
+              idkBtn.disabled = true;
+              nextBtn.style.display = "inline-block";
+          } 
+          else {
+              // Remove guessed Pokémon for mode 2
+              correctPokemon = correctPokemon.filter(p => p.name.toUpperCase() !== guess);
+              updateAccuracy();
+              messageDiv.textContent += ` Remaining Pokemon to guess: ${correctPokemon.length}`;
+              if (correctPokemon.length === 0) {
+                  messageDiv.textContent += " You guessed all the possible Pokemon!";
+                  guessInput.disabled = true;
+                  guessBtn.disabled = true;
+                  idkBtn.disabled = true;
+                  nextBtn.style.display = "inline-block";
+              }
+          }
+      } 
+      else {
+          if (gameMode === 1 || gameType === 3){
+            messageDiv.textContent = `Incorrect. The correct Pokemon were: ${correctPokemon.map(p => p.name).join(", ")}`;
             updateAccuracy();
+            
             guessInput.disabled = true;
             guessBtn.disabled = true;
             idkBtn.disabled = true;
+            
             nextBtn.style.display = "inline-block";
-        } 
-        else {
-            // Remove guessed Pokémon for mode 2
-             correctPokemon = correctPokemon.filter(p => p.name.toUpperCase() !== guess);
-            updateAccuracy();
-            messageDiv.textContent += ` Remaining Pokemon to guess: ${correctPokemon.length}`;
-            if (correctPokemon.length === 0) {
-                messageDiv.textContent += " You guessed all the possible Pokemon!";
-                guessInput.disabled = true;
-                guessBtn.disabled = true;
-                idkBtn.disabled = true;
-                nextBtn.style.display = "inline-block";
-            }
-        }
-    } 
-    else {
-        if (gameMode === 1){
-          messageDiv.textContent = `Incorrect. The correct Pokemon were: ${correctPokemon.map(p => p.name).join(", ")}`;
-          updateAccuracy();
-          
-          guessInput.disabled = true;
-          guessBtn.disabled = true;
-          idkBtn.disabled = true;
-          
-          nextBtn.style.display = "inline-block";
-        }
-        else{
-           messageDiv.textContent = "Incorrect.";
-           updateAccuracy();
-        }
-    }
+          }
+          else{
+             messageDiv.textContent = "Incorrect.";
+             updateAccuracy();
+          }
+      }
+
     guessInput.value = "";
 };
 
@@ -243,7 +315,13 @@ idkBtn.onclick = function() {
 
 nextBtn.onclick = function() {
     if (!playing) return;
-    prepareChallenge();
+    if (gameType === 3){
+        letterIndex++;
+        loadAZChallenge();
+    }
+    else{
+      prepareChallenge();
+    }
     guessInput.focus();
 };
 
@@ -269,6 +347,7 @@ endBtn.onclick = function() {
     guessBtn.style.display = "none";
     idkBtn.style.display = "none";
     nextBtn.style.display = "none";
+    hintBtn.style.display = "none";
     endBtn.style.display = "none";
     startBtn.disabled = false;
     document.getElementById("gameType").disabled = false;
