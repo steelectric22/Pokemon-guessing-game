@@ -120,9 +120,24 @@ function prepareChallenge() {
             prepareChallenge();
             return;
         }
-
         infoDiv.textContent = `Guess Pokemon starting with "${currentLetter}" and in Gen ${currentGen}`;
-     }
+    }
+
+    // pick random gen and type
+    else if (gameType === 4) {
+        currentGen = randomInt(1, 9);
+        currentType = types[randomInt(1, 18)];
+        correctPokemon = allPokemon.filter(p =>
+            p.name[0].toUpperCase() === currentLetter &&
+            p.dex >= genBounds[currentGen] &&
+            p.dex < genBounds[currentGen + 1] &&
+            p.type.includes(currentType)
+        );
+        if (correctPokemon.length === 0) {
+          return prepareChallenge();
+        }
+        infoDiv.textContent = `Guess Pokemon starting with "${currentLetter}", in Gen ${currentGen}, and has type(s): ${currentType}`;
+    }
 
 };
 
@@ -145,13 +160,6 @@ function prepareAZChallenge(){
 
 function loadAZChallenge(){
 
-    if (letterIndex > 26){
-        messageDiv.textContent = "You’ve completed all letters!";
-        endBtn.click();
-        hintBtn.disabled = true;
-        return;
-    }
-    
     messageDiv.textContent = "";
     currentLetter = letters[letterIndex];
     correctPokemon = allPokemon.filter(p => 
@@ -218,7 +226,7 @@ hintBtn.onclick = function() {
     else{
       const randomIndex = randomInt(0, unGuessed.length - 1);
       const hintPokemon = unGuessed[randomIndex];
-      hintDiv.textContent = `A correct pokemon has the secondary type: ${hintPokemon.type}`;
+      hintDiv.textContent = `A correct pokemon has the type: ${hintPokemon.type}`;
   
     }
     
@@ -263,7 +271,7 @@ guessBtn.onclick = function() {
               nextBtn.style.display = "inline-block";
           } 
           else {
-              // Remove guessed Pokémon for mode 2
+              // Remove guessed Pokemon for mode 2
               correctPokemon = correctPokemon.filter(p => p.name.toUpperCase() !== guess);
               updateAccuracy();
               messageDiv.textContent += ` Remaining Pokemon to guess: ${correctPokemon.length}`;
@@ -341,7 +349,7 @@ document.addEventListener("keydown", function(event){
 endBtn.onclick = function() {
     playing = false;
     infoDiv.textContent = "";
-    messageDiv.textContent = `Game ended! Final accuracy: ${((numCorrect / totalGuesses) * 100).toFixed(1)}%`;
+    messageDiv.textContent = `Final accuracy: ${((numCorrect / totalGuesses) * 100).toFixed(1)}%`;
     accuracyDiv.textContent = "";
     guessInput.style.display = "none";
     guessBtn.style.display = "none";
